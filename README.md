@@ -114,3 +114,10 @@ int [][][] mBlock = {{{0,1,0,0},{0,1,0,0}, ....
 - 안드로이드에 LinearLayout이 있으니까 그 안에 좌, 우, 변환 이렇게 세개 버튼을 넣고, 그거랑 MainView를 감싸는 LinearLayout을 추가하자.
 - android linearlayout 검색하면 죄다 xml 방식이 나오니 android linearlayout java 로 검색해서 사용법 숙지
 - Button도 추가해야 하니까 android button java 검색해서 추가. 했으나 안나옴;
+
+- 이것저것 뒤져봤는데 삽질.. 그냥 FrameLayout으로 바꿔야겠다.
+- 안드로이드 스튜디오에서 레이아웃을 디버깅해보기 위해 android studio layout debugging을 검색해서 layout inspector라는게 있는것은 찾아서 봤는데 잘 모르겠음
+- 핵심이 그게 아니므로 그냥 FrameLayout으로 mainLayout을 바꾸기로
+- 대신 FrameLayout을 쓰니 버튼이 위로 나온다. 버튼을 밑으로 내리는 방법을 검색
+- android layout bottom 을 검색해서 내리는 법을 찾아봄
+- 부모를 RelativeLayout으로 잡거나 ConstranintLayout으로 잡으라네;; 쿨럭. 귀찮으니 그냥 보드를 내려서 그리자.

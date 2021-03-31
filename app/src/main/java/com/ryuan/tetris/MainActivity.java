@@ -10,13 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     MainView mMainView;
-    LinearLayout mMainLayout, mButtonLayout;
+    FrameLayout mMainLayout;
+    LinearLayout mButtonLayout;
 
     Button mLeft, mRight, mRotate;
 
@@ -24,14 +27,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mMainLayout = new LinearLayout(this);
-        mMainLayout.setOrientation(LinearLayout.VERTICAL);
+        mMainLayout = new FrameLayout(this);
 
         mMainView = new MainView(this);
+        mMainView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mMainLayout.addView(mMainView);
 
         mButtonLayout = new LinearLayout(this);
         mButtonLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mButtonLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mButtonLayout.setGravity(1);
 
         mLeft = new Button(this);
         mRotate = new Button(this);
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private int BOARD_START_X = 0;
-    private int BOARD_START_Y = 0;
+    private int BOARD_START_Y = 200;
     private int BOARD_WIDTH = 10;
     private int BOARD_HEIGHT = 20;
 
@@ -136,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
                         continue;
 
                     int computedRow = mBlockLine + row;
-                    canvas.drawRect(col * BLOCK_UNIT_SIZE, computedRow * BLOCK_UNIT_SIZE, (col+1) * BLOCK_UNIT_SIZE, (computedRow+1) * BLOCK_UNIT_SIZE, paint);
+                    int computedRowPosition = BOARD_START_Y + computedRow * BLOCK_UNIT_SIZE;
+                    canvas.drawRect(col * BLOCK_UNIT_SIZE, computedRowPosition, (col+1) * BLOCK_UNIT_SIZE, computedRowPosition + BLOCK_UNIT_SIZE, paint);
                 }
             }
         }
