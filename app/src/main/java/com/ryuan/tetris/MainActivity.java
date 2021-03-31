@@ -10,16 +10,41 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     MainView mMainView;
+    LinearLayout mMainLayout, mButtonLayout;
+
+    Button mLeft, mRight, mRotate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mMainLayout = new LinearLayout(this);
+        mMainLayout.setOrientation(LinearLayout.VERTICAL);
+
         mMainView = new MainView(this);
-        setContentView(mMainView);
+        mMainLayout.addView(mMainView);
+
+        mButtonLayout = new LinearLayout(this);
+        mButtonLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        mLeft = new Button(this);
+        mRotate = new Button(this);
+        mRight = new Button(this);
+        mLeft.setText("<");
+        mRotate.setText(" ROTATE ");
+        mRight.setText(">");
+        mButtonLayout.addView(mLeft);
+        mButtonLayout.addView(mRotate);
+        mButtonLayout.addView(mRight);
+
+        mMainLayout.addView(mButtonLayout);
+        setContentView(mMainLayout);
         mMainView.Start();
     }
 

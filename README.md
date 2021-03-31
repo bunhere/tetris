@@ -108,3 +108,9 @@ int [][][] mBlock = {{{0,1,0,0},{0,1,0,0}, ....
 - 동적 크기 2차원 배열은 어떻게 만들지?
 - 대충 짰는데 한칸 더 내려가는 버전이 나왔다.
 - 수정. 또 사소한 실수;
+
+7. 좌우로 움직여보자(15:15~)
+- 아무생각없이 했더니 버튼을 어찌 넣어야 하나 고민이 됨.
+- 안드로이드에 LinearLayout이 있으니까 그 안에 좌, 우, 변환 이렇게 세개 버튼을 넣고, 그거랑 MainView를 감싸는 LinearLayout을 추가하자.
+- android linearlayout 검색하면 죄다 xml 방식이 나오니 android linearlayout java 로 검색해서 사용법 숙지
+- Button도 추가해야 하니까 android button java 검색해서 추가. 했으나 안나옴;
