@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void Start() {
             // initialize board
-            for (int i = 1; i < BOARD_WIDTH; ++i) {
+            for (int i = 1; i < BOARD_WIDTH + 1; ++i) {
                 for (int j = 0; j < BOARD_HEIGHT; ++j) {
                     mBoard[i][j] = 0;
                 }
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 mBoard[0][j] = 2; // left wall
                 mBoard[BOARD_WIDTH+1][j] = 2; // right wall
             }
-            for (int i = 1; i < BOARD_WIDTH; ++i) {
+            for (int i = 1; i < BOARD_WIDTH + 1; ++i) {
                 mBoard[i][BOARD_HEIGHT] = 2; // bottom wall
             }
             mTimer.run();
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             int nextBlockLine = mBlockLine+1;
             if (!canMove(mBlockPos, nextBlockLine))
                 return;
+            Log.w("RYUAN","process ok");
             mBlockLine++;
 
         }
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private boolean canMove(int blockPos, int blockLine) {
+            Log.w("RYUAN", "canMove(" + blockPos + ", " + blockLine + ")");
             // check block is overlapped with other block or wall
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
@@ -195,9 +198,10 @@ public class MainActivity extends AppCompatActivity {
                     int computedRow = blockLine + row;
                     int computedCol = blockPos + col;
 
-                    if (computedCol < 0 || computedCol > BOARD_WIDTH)
+                    if (computedCol < 0 || computedCol > BOARD_WIDTH-1)
                         return false;
-                    if (mBoard[computedCol][computedRow] != 0)
+                    Log.w("RYUAN", "col/row:" + computedCol + "/" + computedRow);
+                    if (mBoard[computedCol+1][computedRow] != 0)
                         return false;
                 }
             }
