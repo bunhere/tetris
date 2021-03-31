@@ -144,12 +144,22 @@ public class MainActivity extends AppCompatActivity {
             mTimer.run();
         }
 
+        private int temp_picked = 0;
         private void NewBlock() {
-            int picked = 0;
+            mBlockLine = 0;
+            mBlockPos = 0;
+
+            int picked = temp_picked++;
+            if (temp_picked >= 7)
+                temp_picked = 0;
             for (int col = 0; col < 4; ++col) {
                 for (int row = 0; row < 4; ++row) {
                     mBlock[col][row] = mBlockTypes[picked][col][row];
                 }
+            }
+            if (!canMove(mBlock, mBlockPos, mBlockLine)) {
+                // TODO: show game over
+                return;
             }
         }
 
@@ -167,6 +177,18 @@ public class MainActivity extends AppCompatActivity {
 
             paint.setAntiAlias(false);
             paint.setColor(Color.WHITE);
+
+            // Draw previous blocks
+            for (int i = 1; i < BOARD_WIDTH + 1; ++i) {
+                for (int j = 0; j < BOARD_HEIGHT; ++j) {
+                    if (mBoard[i][j] == 1) {
+                        int computedColPosition = BOARD_START_X + (i-1) * BLOCK_UNIT_SIZE;
+                        int computedRowPosition = BOARD_START_Y + j * BLOCK_UNIT_SIZE;
+                        canvas.drawRect(computedColPosition, computedRowPosition, computedColPosition + BLOCK_UNIT_SIZE, computedRowPosition + BLOCK_UNIT_SIZE, paint);
+                    }
+                }
+            }
+
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
                     if (mBlock[row][col] == 0)
@@ -184,8 +206,11 @@ public class MainActivity extends AppCompatActivity {
         private int mBlockPos = 0;
         void processNext() {
             int nextBlockLine = mBlockLine+1;
-            if (!canMove(mBlock, mBlockPos, nextBlockLine))
+            if (!canMove(mBlock, mBlockPos, nextBlockLine)) {
+                MarkBlockToBoard();
+                NewBlock();
                 return;
+            }
             Log.w("RYUAN","process ok");
             mBlockLine++;
 
@@ -241,13 +266,30 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        private void MarkBlockToBoard() {
+            for (int row = 0; row < 4; ++row) {
+                for (int col = 0; col < 4; ++col) {
+                    if (mBlock[row][col] == 0)
+                        continue;
+                    int computedRow = mBlockLine + row;
+                    int computedCol = mBlockPos + col;
+
+                    if (computedCol < 0 || computedCol > BOARD_WIDTH-1)
+                        continue;
+                    if (computedRow < 0 || computedRow > BOARD_HEIGHT)
+                        continue;
+                    mBoard[computedCol+1][computedRow] = 1;
+                }
+            }
+
+        }
         Handler mHandler = new Handler(Looper.getMainLooper());
         Runnable mTimer = new Runnable() {
             @Override
             public void run() {
                 processNext();
                 invalidate();
-                mHandler.postDelayed(this, 1000);
+                mHandler.postDelayed(this, 300);
             }
         };
     }
