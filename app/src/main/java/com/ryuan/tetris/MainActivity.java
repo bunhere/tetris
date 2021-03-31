@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
     private int BOARD_START_X = 0;
     private int BOARD_START_Y = 0;
-    private int BOARD_WIDTH = BLOCK_UNIT_SIZE * 10;
-    private int BOARD_HEIGHT = BLOCK_UNIT_SIZE * 20;
+    private int BOARD_WIDTH = 10;
+    private int BOARD_HEIGHT = 20;
+
+    private int[][] mBoard = new int[BOARD_WIDTH + 2][ BOARD_HEIGHT + 1];
 
     private class MainView extends View {
         public MainView(Context context) {
@@ -73,6 +75,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void Start() {
+            // initialize board
+            for (int i = 1; i < BOARD_WIDTH; ++i) {
+                for (int j = 0; j < BOARD_HEIGHT; ++j) {
+                    mBoard[i][j] = 0;
+                }
+            }
+            for (int j = 0; j < BOARD_HEIGHT + 1; ++j) {
+                mBoard[0][j] = 2; // left wall
+                mBoard[BOARD_WIDTH+1][j] = 2; // right wall
+            }
+            for (int i = 1; i < BOARD_WIDTH; ++i) {
+                mBoard[i][BOARD_HEIGHT] = 2; // bottom wall
+            }
             mTimer.run();
         }
 
@@ -86,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawPaint(paint);
 
             paint.setColor(Color.GREEN);
-            canvas.drawRect(BOARD_START_X, BOARD_START_Y, BOARD_START_X + BOARD_WIDTH, BOARD_START_Y + BOARD_HEIGHT, paint);
+            canvas.drawRect(BOARD_START_X, BOARD_START_Y, BOARD_START_X + BOARD_WIDTH * BLOCK_UNIT_SIZE, BOARD_START_Y + BOARD_HEIGHT * BLOCK_UNIT_SIZE, paint);
 
             paint.setAntiAlias(false);
             paint.setColor(Color.WHITE);
@@ -103,7 +118,20 @@ public class MainActivity extends AppCompatActivity {
 
         private int mBlockLine = 0;
         void processNext() {
+            int nextBlockLine = mBlockLine+1;
+            // check block is overlapped with other block or wall
+            for (int row = 0; row < 4; ++row) {
+                for (int col = 0; col < 4; ++col) {
+                    if (mBlock[0][row][col] == 0)
+                        continue;
+                    int computedRow = mBlockLine + row;
+                    int computedCol = col;
+                    if (mBoard[computedCol][computedRow] != 0)
+                        return;
+                }
+            }
             mBlockLine++;
+
         }
         Handler mHandler = new Handler(Looper.getMainLooper());
         Runnable mTimer = new Runnable() {
