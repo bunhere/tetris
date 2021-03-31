@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         private int mBlockPos = 0;
         void processNext() {
             int nextBlockLine = mBlockLine+1;
-            if (!canMove(mBlockPos, nextBlockLine))
+            if (!canMove(mBlock, mBlockPos, nextBlockLine))
                 return;
             Log.w("RYUAN","process ok");
             mBlockLine++;
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void moveLeft() {
             int nextBlockPos = mBlockPos-1;
-            if (!canMove(nextBlockPos, mBlockLine))
+            if (!canMove(mBlock, nextBlockPos, mBlockLine))
                 return;
             invalidate();
             mBlockPos = nextBlockPos;
@@ -201,21 +201,32 @@ public class MainActivity extends AppCompatActivity {
 
         public void moveRight() {
             int nextBlockPos = mBlockPos+1;
-            if (!canMove(nextBlockPos, mBlockLine))
+            if (!canMove(mBlock, nextBlockPos, mBlockLine))
                 return;
             invalidate();
             mBlockPos = nextBlockPos;
         }
 
         public void rotate() {
+            int[][] nextBlock = new int[4][4];
+
+            for (int col = 0; col < 4; ++col) {
+                for (int row = 0; row < 4; ++row) {
+                    nextBlock[3 - row][col] = mBlock[col][row];
+                }
+            }
+            if (!canMove(nextBlock, mBlockPos, mBlockLine))
+                return;
+            mBlock = nextBlock;
+            invalidate();
         }
 
-        private boolean canMove(int blockPos, int blockLine) {
+        private boolean canMove(int [][] block, int blockPos, int blockLine) {
             Log.w("RYUAN", "canMove(" + blockPos + ", " + blockLine + ")");
             // check block is overlapped with other block or wall
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
-                    if (mBlock[row][col] == 0)
+                    if (block[row][col] == 0)
                         continue;
                     int computedRow = blockLine + row;
                     int computedCol = blockPos + col;
