@@ -42,8 +42,20 @@ public class MainActivity extends AppCompatActivity {
         mRotate = new Button(this);
         mRight = new Button(this);
         mLeft.setText("<");
+        mLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainView.moveLeft();
+            }
+        });
         mRotate.setText(" ROTATE ");
         mRight.setText(">");
+        mRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainView.moveRight();
+            }
+        });
         mButtonLayout.addView(mLeft);
         mButtonLayout.addView(mRotate);
         mButtonLayout.addView(mRight);
@@ -142,28 +154,56 @@ public class MainActivity extends AppCompatActivity {
 
                     int computedRow = mBlockLine + row;
                     int computedRowPosition = BOARD_START_Y + computedRow * BLOCK_UNIT_SIZE;
-                    canvas.drawRect(col * BLOCK_UNIT_SIZE, computedRowPosition, (col+1) * BLOCK_UNIT_SIZE, computedRowPosition + BLOCK_UNIT_SIZE, paint);
+                    int computedCol = mBlockPos + col;
+                    canvas.drawRect(computedCol * BLOCK_UNIT_SIZE, computedRowPosition, (computedCol+1) * BLOCK_UNIT_SIZE, computedRowPosition + BLOCK_UNIT_SIZE, paint);
                 }
             }
         }
 
         private int mBlockLine = 0;
+        private int mBlockPos = 0;
         void processNext() {
             int nextBlockLine = mBlockLine+1;
+            if (!canMove(mBlockPos, nextBlockLine))
+                return;
+            mBlockLine++;
+
+        }
+
+        public void moveLeft() {
+            int nextBlockPos = mBlockPos-1;
+            if (!canMove(nextBlockPos, mBlockLine))
+                return;
+            invalidate();
+            mBlockPos = nextBlockPos;
+        }
+
+        public void moveRight() {
+            int nextBlockPos = mBlockPos+1;
+            if (!canMove(nextBlockPos, mBlockLine))
+                return;
+            invalidate();
+            mBlockPos = nextBlockPos;
+        }
+
+        private boolean canMove(int blockPos, int blockLine) {
             // check block is overlapped with other block or wall
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
                     if (mBlock[0][row][col] == 0)
                         continue;
-                    int computedRow = nextBlockLine + row;
-                    int computedCol = col;
+                    int computedRow = blockLine + row;
+                    int computedCol = blockPos + col;
+
+                    if (computedCol < 0 || computedCol > BOARD_WIDTH)
+                        return false;
                     if (mBoard[computedCol][computedRow] != 0)
-                        return;
+                        return false;
                 }
             }
-            mBlockLine++;
-
+            return true;
         }
+
         Handler mHandler = new Handler(Looper.getMainLooper());
         Runnable mTimer = new Runnable() {
             @Override
