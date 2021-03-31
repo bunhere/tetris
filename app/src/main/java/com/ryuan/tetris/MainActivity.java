@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mRotate.setText(" ROTATE ");
+        mRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainView.rotate();
+            }
+        });
         mRight.setText(">");
         mRight.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mMainView.Start();
     }
 
-    private int [][][] mBlock = {
+    private int [][][] mBlockTypes = {
            {{0,1,0,0},
             {0,1,0,0},
             {0,1,0,0},
@@ -102,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
             {0,0,0,0},
             {0,0,0,0}}};
 
+    private int[][] mBlock = new int[4][4];
+
     private int BLOCK_UNIT_SIZE = 50;
 
 
@@ -131,7 +139,18 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 1; i < BOARD_WIDTH + 1; ++i) {
                 mBoard[i][BOARD_HEIGHT] = 2; // bottom wall
             }
+
+            NewBlock();
             mTimer.run();
+        }
+
+        private void NewBlock() {
+            int picked = 0;
+            for (int col = 0; col < 4; ++col) {
+                for (int row = 0; row < 4; ++row) {
+                    mBlock[col][row] = mBlockTypes[picked][col][row];
+                }
+            }
         }
 
         @Override
@@ -150,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             paint.setColor(Color.WHITE);
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
-                    if (mBlock[0][row][col] == 0)
+                    if (mBlock[row][col] == 0)
                         continue;
 
                     int computedRow = mBlockLine + row;
@@ -188,12 +207,15 @@ public class MainActivity extends AppCompatActivity {
             mBlockPos = nextBlockPos;
         }
 
+        public void rotate() {
+        }
+
         private boolean canMove(int blockPos, int blockLine) {
             Log.w("RYUAN", "canMove(" + blockPos + ", " + blockLine + ")");
             // check block is overlapped with other block or wall
             for (int row = 0; row < 4; ++row) {
                 for (int col = 0; col < 4; ++col) {
-                    if (mBlock[0][row][col] == 0)
+                    if (mBlock[row][col] == 0)
                         continue;
                     int computedRow = blockLine + row;
                     int computedCol = blockPos + col;
