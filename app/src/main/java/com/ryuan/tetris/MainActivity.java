@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int col = 0; col < 4; ++col) {
                     if (mBlock[0][row][col] == 0)
                         continue;
-                    int computedRow = mBlockLine + row;
+                    int computedRow = nextBlockLine + row;
                     int computedCol = col;
                     if (mBoard[computedCol][computedRow] != 0)
                         return;
