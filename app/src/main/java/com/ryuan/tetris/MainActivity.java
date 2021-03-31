@@ -20,6 +20,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mMainView);
     }
 
+    private int [][][] mBlock = {
+           {{0,1,0,0},
+            {0,1,0,0},
+            {0,1,0,0},
+            {0,1,0,0}},
+
+           {{0,1,1,0},
+            {0,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}},
+
+           {{0,1,1,0},
+            {0,0,1,0},
+            {0,0,1,0},
+            {0,0,0,0}},
+
+           {{0,0,1,0},
+            {0,1,1,0},
+            {0,1,0,0},
+            {0,0,0,0}},
+
+           {{0,1,0,0},
+            {0,1,1,0},
+            {0,0,1,0},
+            {0,0,0,0}},
+
+           {{0,0,0,0},
+            {0,1,1,0},
+            {0,1,1,0},
+            {0,0,0,0}},
+
+           {{0,1,0,0},
+            {1,1,1,0},
+            {0,0,0,0},
+            {0,0,0,0}}};
+
+    private int BLOCK_UNIT_SIZE = 20;
+
     private class MainView extends View {
         public MainView(Context context) {
             super(context);
@@ -33,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.BLUE);
             canvas.drawPaint(paint);
+
+            paint.setAntiAlias(false);
+            paint.setColor(Color.WHITE);
+            for (int row = 0; row < 4; ++row) {
+                for (int col = 0; col < 4; ++col) {
+                    if (mBlock[0][row][col] == 0)
+                        continue;
+                    canvas.drawRect(col * BLOCK_UNIT_SIZE, row * BLOCK_UNIT_SIZE, (col+1) * BLOCK_UNIT_SIZE, (row+1) * BLOCK_UNIT_SIZE, paint);
+                }
+            }
         }
     }
 }
