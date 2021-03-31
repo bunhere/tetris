@@ -95,3 +95,7 @@ int [][][] mBlock = {{{0,1,0,0},{0,1,0,0}, ....
 - 이제 보드로 사용할 영역을 고려해야 할듯. 한칸이 50이면 10개면 500 높이는 20개쯤 잡으면 1000
 - 벌써 지겹다;;쿨럭
 
+5. 블럭이 내려오게 해보자(14:06~14:25)
+- 타이머 기능이 필요할것 같다. android timer canvas 를 검색해서 이것저것 확인 CountTimer는 내가 원하는게 아닌것 같음.
+- https://stackoverflow.com/questions/27388569/how-to-make-the-android-canvas-re-draw-every-5-seconds/27388797 를 참고하기로
+

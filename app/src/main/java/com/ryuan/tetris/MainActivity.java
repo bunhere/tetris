@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mMainView = new MainView(this);
         setContentView(mMainView);
+        mMainView.Start();
     }
 
     private int [][][] mBlock = {
@@ -66,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
     private class MainView extends View {
         public MainView(Context context) {
-            super(context);
+            super(context);;
+        }
+
+        public void Start() {
+            mTimer.run();
         }
 
         @Override
@@ -87,9 +94,25 @@ public class MainActivity extends AppCompatActivity {
                 for (int col = 0; col < 4; ++col) {
                     if (mBlock[0][row][col] == 0)
                         continue;
-                    canvas.drawRect(col * BLOCK_UNIT_SIZE, row * BLOCK_UNIT_SIZE, (col+1) * BLOCK_UNIT_SIZE, (row+1) * BLOCK_UNIT_SIZE, paint);
+
+                    int computedRow = mBlockLine + row;
+                    canvas.drawRect(col * BLOCK_UNIT_SIZE, computedRow * BLOCK_UNIT_SIZE, (col+1) * BLOCK_UNIT_SIZE, (computedRow+1) * BLOCK_UNIT_SIZE, paint);
                 }
             }
         }
+
+        private int mBlockLine = 0;
+        void processNext() {
+            mBlockLine++;
+        }
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        Runnable mTimer = new Runnable() {
+            @Override
+            public void run() {
+                processNext();
+                invalidate();
+                mHandler.postDelayed(this, 1000);
+            }
+        };
     }
 }
