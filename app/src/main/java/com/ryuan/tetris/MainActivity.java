@@ -56,7 +56,13 @@ public class MainActivity extends AppCompatActivity {
             {0,0,0,0},
             {0,0,0,0}}};
 
-    private int BLOCK_UNIT_SIZE = 20;
+    private int BLOCK_UNIT_SIZE = 50;
+
+
+    private int BOARD_START_X = 0;
+    private int BOARD_START_Y = 0;
+    private int BOARD_WIDTH = BLOCK_UNIT_SIZE * 10;
+    private int BOARD_HEIGHT = BLOCK_UNIT_SIZE * 20;
 
     private class MainView extends View {
         public MainView(Context context) {
@@ -71,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.BLUE);
             canvas.drawPaint(paint);
+
+            paint.setColor(Color.GREEN);
+            canvas.drawRect(BOARD_START_X, BOARD_START_Y, BOARD_START_X + BOARD_WIDTH, BOARD_START_Y + BOARD_HEIGHT, paint);
 
             paint.setAntiAlias(false);
             paint.setColor(Color.WHITE);
